@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_migrate import Migrate
-
-from database import db
+from database.db import db
+from models.consulta import Consulta
 
 app = Flask(__name__)
 app.config.from_object('config.Config')
