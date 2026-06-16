@@ -1,4 +1,6 @@
 from flask import Blueprint, request, jsonify
+from database.db import db
+from models.consulta import Consulta
 from services.cashback_service import calcular_cashback
 
 cashback_bp = Blueprint("cashback", __name__)
@@ -17,6 +19,19 @@ def cashback():
         desconto,
         tipo_cliente == "VIP"
     )
+    
+    ip = request.remote_addr
+    
+    consulta = Consulta(
+        ip=ip,
+        tipo_cliente=tipo_cliente,
+        valor_compra=valor,
+        desconto=desconto,
+        cashback=resultado
+    )
+
+    db.session.add(consulta)
+    db.session.commit()
 
     return jsonify({
         "cashback": resultado
