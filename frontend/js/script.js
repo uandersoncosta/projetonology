@@ -68,4 +68,43 @@ document.addEventListener('DOMContentLoaded', () => {
     mainTitle.textContent = 'Histórico de Consultas';
     loadHistory();
   });
+
+  async function loadHistory() {
+    try {
+      const response = await fetch(`${API_URL}consultas`);
+
+      if (!response.ok) {
+        throw new Error('Erro na requisição da API de histórico');
+      }
+
+      const data = await response.json();
+      const historyData = data.consultas || [];
+
+      historyTbody.innerHTML = '';
+
+      if (historyData.length === 0) {
+        emptyState.classList.remove('d-none');
+        historyTbody.closest('.table-responsive').classList.add('d-none');
+      } else {
+        emptyState.classList.add('d-none');
+        historyTbody.closest('.table-responsive').classList.remove('d-none');
+
+        historyData.forEach(item => {
+          const clientTypeLabel = item.tipo_cliente ? item.tipo_cliente.toUpperCase() : 'NORMAL';
+          const badgeClass = clientTypeLabel === 'VIP' ? 'bg-warning text-dark' : 'bg-secondary';
+
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td><span class="badge ${badgeClass}">${item.tipo_cliente}</span></td>
+            <td>${formatter.format(item.valor_compra)}</td>
+            <td class="text-success fw-bold">${formatter.format(item.cashback)}</td>
+          `;
+          historyTbody.appendChild(tr);
+        });
+      }
+    } catch (error) {
+      console.error("Erro ao carregar histórico:", error);
+      historyTbody.innerHTML = '<tr><td colspan="4" class="text-center text-danger">Erro ao carregar histórico</td></tr>';
+    }
+  }
 });
