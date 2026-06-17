@@ -20,7 +20,9 @@ def cashback():
         tipo_cliente == "VIP"
     )
     
-    ip = request.remote_addr
+    ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+    if ip and ',' in ip:
+        ip = ip.split(',')[0].strip()
     
     consulta = Consulta(
         ip=ip,

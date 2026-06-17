@@ -7,7 +7,9 @@ consultas_bp = Blueprint("consultas", __name__)
 
 @consultas_bp.route("/consultas", methods=["GET"])
 def consultas():
-    ip = request.remote_addr
+    ip = request.headers.get('X-Forwarded-For', request.remote_addr)
+    if ip and ',' in ip:
+        ip = ip.split(',')[0].strip()
 
     consultas = Consulta.query.filter_by(ip=ip).all()
 
