@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', () => {
+
   const form = document.getElementById('cashback-form');
   const resultContainer = document.getElementById('result-container');
   const cashbackResult = document.getElementById('cashback-result');
@@ -26,7 +26,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (!clientType || isNaN(purchaseValue) || isNaN(discountValue)) return;
 
-    // UI Loading state
     btnText.classList.add('d-none');
     spinner.classList.remove('d-none');
     submitBtn.disabled = true;
@@ -48,7 +47,6 @@ document.addEventListener('DOMContentLoaded', () => {
       resultContainer.classList.remove('d-none');
 
     } catch (error) {
-      console.error("Erro ao calcular cashback:", error);
       alert("Erro de comunicação com o servidor.");
     } finally {
       btnText.classList.remove('d-none');
@@ -103,8 +101,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       }
     } catch (error) {
-      console.error("Erro ao carregar histórico:", error);
       historyTbody.innerHTML = '<tr><td colspan="4" class="text-center text-danger">Erro ao carregar histórico</td></tr>';
     }
   }
-});
